@@ -18,7 +18,7 @@ export const story: StoryStep[] = [
     title: 'Hey, you.',
     lead: 'Hope your day’s been as lovely as your smile.',
     aside:
-      'I’m Biscuit. Professional good boy.\nOccasional love-letter delivery service.',
+      'I’m Biscuit. Professional good boy.\nOccasional letter delivery service.',
     button: 'Hi, Biscuit',
     footnote: 'psst… I have something to tell you.',
   },
