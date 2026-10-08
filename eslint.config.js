@@ -12,6 +12,7 @@ export default tseslint.config(
       'public/**',
       '.npm-cache/**',
       '.cache/**',
+      '.vercel/**',
     ],
   },
   {
@@ -29,7 +30,7 @@ export default tseslint.config(
   },
   { files: ['*.{js,ts}'], languageOptions: { globals: globals.node } },
   {
-    files: ['server/**/*.mjs'],
+    files: ['server/**/*.mjs', 'api/**/*.js'],
     extends: [js.configs.recommended],
     languageOptions: { globals: globals.node },
   },

@@ -14,3 +14,8 @@ artifacts/browser-profile/
 !.vscode/extensions.json
 data/responses.json
 data/*.tmp
+.vercel/
+artifacts/
+coverage/
+*.pem
+*.key

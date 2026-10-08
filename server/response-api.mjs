@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { mkdir, readFile, rename, rm, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
+import { createBlobResponseStore } from './blob-store.mjs';
 
 const SESSION_COOKIE = 'biscuit_visitor';
 const sessionPattern =
@@ -160,6 +161,20 @@ async function readBody(req) {
   )
     throw new RequestError(415, 'Please send JSON.');
   const chunks = [];
+  // Vercel may parse JSON before invoking the Node handler.
+  if (req.body !== undefined) {
+    const body =
+      typeof req.body === 'string' || Buffer.isBuffer(req.body)
+        ? req.body.toString()
+        : JSON.stringify(req.body);
+    if (Buffer.byteLength(body) > 16_384)
+      throw new RequestError(413, 'This date plan is too large.');
+    try {
+      return JSON.parse(body);
+    } catch {
+      throw new RequestError(400, 'Please send valid JSON.');
+    }
+  }
   let length = 0;
   for await (const chunk of req.iterator({ destroyOnReturn: false })) {
     length += chunk.length;
@@ -178,8 +193,12 @@ async function readBody(req) {
 
 export function createResponseApi({
   filePath = process.env.RESPONSES_FILE || resolve('data/responses.json'),
+  store = process.env.VERCEL === '1' ||
+  process.env.BLOB_READ_WRITE_TOKEN ||
+  process.env.BLOB_STORE_ID
+    ? createBlobResponseStore({ validatePlan })
+    : createResponseStore(filePath),
 } = {}) {
-  const store = createResponseStore(filePath);
   return (req, res, next) => {
     const pathname = new URL(req.url || '/', 'http://localhost').pathname;
     // Also keep these project directories private during Vite development.
@@ -191,7 +210,7 @@ export function createResponseApi({
       next();
       return;
     }
-    void (async () => {
+    return (async () => {
       const isAdmin = pathname === '/api/admin-44444/entries';
       if (!isAdmin && pathname !== '/api/response')
         throw new RequestError(404, 'Not found.');
@@ -235,7 +254,9 @@ export function createResponseApi({
       const id = cookie && sessionPattern.test(cookie) ? cookie : randomUUID();
       if (id !== cookie) {
         const secure =
-          req.socket.encrypted || process.env.COOKIE_SECURE === 'true';
+          req.socket.encrypted ||
+          process.env.COOKIE_SECURE === 'true' ||
+          process.env.VERCEL === '1';
         res.setHeader(
           'Set-Cookie',
           `${SESSION_COOKIE}=${id}; Path=/; HttpOnly; SameSite=Lax; Max-Age=31536000${secure ? '; Secure' : ''}`,

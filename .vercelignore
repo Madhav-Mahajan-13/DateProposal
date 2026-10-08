@@ -1,0 +1,8 @@
+.git
+.cache
+.npm-cache
+artifacts
+coverage
+data
+.env*
+server/*.test.mjs

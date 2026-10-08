@@ -4,7 +4,7 @@ A date invitation delivered by Biscuit, a golden puppy. Built with React, TypeSc
 
 ## Run locally
 
-Use Node.js 22.14 or newer and npm. From this directory:
+Use Node.js 22 (22.14 or newer) and npm. From this directory:
 
 ```sh
 npm install
@@ -68,7 +68,7 @@ Clicking that first decline opens one short puppy appeal: Biscuit moves from his
 
 Both yes buttons open a date-planning form beside a happy Biscuit. She can choose dosa, street food, and coffee; suggest a day and time; name a favorite spot; and write her own itinerary. All fields are optional. Past dates are rejected by the date field.
 
-"Save my little plan" writes her answers to `data/responses.json` through the Node API, then shows a reply she can copy. Returning to the form in the same browser prefills the saved answers; saving edits updates that response. Unsaved edits are not persisted. A private visitor cookie remembers the browser for up to one year. Clearing cookies or using another browser starts a separate response.
+"Save my little plan" writes her answers through the Node API (local JSON during development; private Vercel Blob storage when deployed), then shows a reply she can copy. Returning to the form in the same browser prefills the saved answers; saving edits updates that response. Unsaved edits are not persisted. A private visitor cookie remembers the browser for up to one year. Clearing cookies or using another browser starts a separate response.
 
 The JSON file is created automatically, excluded from Git, and blocked from public serving. `data/responses.example.json` shows its empty structure. Each saved entry contains the plan and its last update time. `GET /api/response` loads only the current visitor's response; `PUT /api/response` validates and saves it. The server serializes writes and replaces the file atomically. Loading and saving failures show retry messages without claiming success.
 
@@ -76,9 +76,28 @@ The JSON file is created automatically, excluded from Git, and blocked from publ
 
 ## View saved entries
 
-Open `/admin-44444` to view saved plans, newest updates first. The page displays food choices, day, time, place, itinerary, and last saved time. Use **Refresh entries** to check for changes. **Clear all entries** asks for confirmation, then permanently empties the saved responses and removes their prefill on the next form load. It reads the same JSON file through `GET /api/admin-44444/entries` and does not expose visitor cookie identifiers. There is no login: anyone with this URL can view or clear the entries. The invitation does not link to it.
+Open `/admin-44444` to view saved plans, newest updates first. The page displays food choices, day, time, place, itinerary, and last saved time. Use **Refresh entries** to check for changes. **Clear all entries** asks for confirmation, then permanently empties the saved responses and removes their prefill on the next form load. It reads the same response store through `GET /api/admin-44444/entries` and does not expose visitor cookie identifiers. There is no login: anyone with this URL can view or clear the entries. The invitation does not link to it.
 
-## Production server
+## Deploy to Vercel
+
+1. Push this project to your Git repository and import it into Vercel. Use the **Vite** preset; the included configuration builds with `npm run build` and serves `dist`.
+2. In the project's **Storage** tab, create a **Blob** store with **Private** access and connect it to this project. Include Production and Preview if you use preview deployments. Vercel supplies the storage credentials automatically; you do not need to type keys into an env file.
+3. **Redeploy** after connecting storage so the functions receive the connection settings.
+4. Open the deployed invitation, save a test plan, refresh and open the form again to verify prefill. Open `/admin-44444` to view it. Use **Clear all entries** to remove your test response.
+
+The two files under `api/` run as Vercel Node functions. `vercel.json` also makes the admin URL work on direct visits and refreshes. The app uses private Blob reads without caching and conditional writes with retry to preserve responses across concurrent function instances. A missing storage connection produces a save/load error, never a temporary filesystem fallback.
+
+Production responses live in `biscuit/production/responses.json`. Preview and development use separate paths, so clearing preview entries does not clear production data. All preview deployments connected to the same store share the preview document. Existing local responses are not uploaded automatically. The browser cookie belongs to each site's domain, so use one consistent production URL for the invitation and prefill.
+
+The Blob document is private, but the admin page still has no login: anyone who knows its URL can view or clear entries.
+
+Setup reference: [Vercel Blob SDK and project connection](https://vercel.com/docs/vercel-blob/using-blob-sdk).
+
+## Git and deployment exclusions
+
+`.gitignore` excludes real responses, environment files, Vercel metadata, dependencies, builds, caches, credentials, and new preview artifacts. `.env.example` and the lockfile stay included. Already-tracked design screenshots remain in Git; `.vercelignore` excludes all artifacts and local data from deployment uploads.
+
+## Standalone production server
 
 ```sh
 npm run build
