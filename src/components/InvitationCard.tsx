@@ -6,6 +6,7 @@ import { useDeclineProximity } from '../hooks/useDeclineProximity';
 import PuppyAppeal from './PuppyAppeal';
 import type { PuppyOrigin } from './PuppyAppeal';
 import DatePlanForm from './DatePlanForm';
+import DeclineStatus from './DeclineStatus';
 
 interface InvitationCardProps {
   step: number;
@@ -85,6 +86,7 @@ export default function InvitationCard({
                 <p className="aside">{content.aside}</p>
               </div>
             </div>
+            {outcome === 'declined' && <DeclineStatus />}
             <div className="actions">
               {outcome ? (
                 <button type="button" className="secondary" onClick={onRestart}>

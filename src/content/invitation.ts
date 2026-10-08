@@ -11,7 +11,7 @@ export interface StoryStep extends Message {
 }
 export type Outcome = 'accepted' | 'declined';
 
-// Personalize Biscuit's message here. Answers are not sent or stored.
+// Personalize Biscuit's message here.
 export const story: StoryStep[] = [
   {
     chapter: '01 / THE HELLO',
@@ -52,7 +52,7 @@ export const story: StoryStep[] = [
   },
   {
     chapter: '05 / THE BIG QUESTION',
-    title: 'A date with my human?',
+    title: 'Will you go out with me?',
     lead: 'Crispy dosa, your favorite street food, and a coffee we don’t have to rush.',
     aside:
       'You pick the spot. He brings the company.\nWould you like to pick a day?',
@@ -67,7 +67,7 @@ export const endings: Record<Outcome, Message> = {
     title: 'Oh, tail-wagging news!',
     lead: 'Dosa, coffee, and a very happy wingdog. I had a good feeling about you two.',
     aside:
-      'Send him a “yes” and a day that works for you.\nThis little page doesn’t send your answer—so tell him yourself. ♡',
+      'Pick a day and the little things you’d love to do.\nBiscuit will save your plan for him. ♡',
     footnote: 'My work here is done. Payment in treats, please.',
   },
   declined: {

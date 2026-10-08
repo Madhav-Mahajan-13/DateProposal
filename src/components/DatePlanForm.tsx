@@ -100,7 +100,7 @@ export default function DatePlanForm({ onRestart }: { onRestart: () => void }) {
         }).format(parsedDay)
       : 'Let’s pick a day together';
   const reply = [
-    'Yes, I’d love to go on a date with you! ♡',
+    'Yes, I’d love to go out with you! ♡',
     '',
     `On the menu: ${
       foods.length
@@ -140,12 +140,12 @@ export default function DatePlanForm({ onRestart }: { onRestart: () => void }) {
         <span className="chapter">
           {submitted
             ? 'ONE LITTLE NOTE, READY TO GO'
-            : 'BISCUIT’S VERY IMPORTANT DATE NOTES'}
+            : 'BISCUIT’S VERY IMPORTANT OUTING NOTES'}
         </span>
         <span aria-hidden="true">♡</span>
       </div>
       <h2 ref={titleRef} tabIndex={-1}>
-        {submitted ? 'A date, your way.' : 'Yay! Let’s make it lovely.'}
+        {submitted ? 'Going out, your way.' : 'Yay! Let’s make it lovely.'}
       </h2>
       {submitted ? (
         <>

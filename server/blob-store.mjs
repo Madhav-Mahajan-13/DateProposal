@@ -32,7 +32,8 @@ export function createBlobResponseStore({
         typeof response?.updatedAt !== 'string'
       )
         throw new Error('Invalid saved response');
-      validatePlan(response.plan);
+      if (response.outcome !== 'declined' || response.plan !== null)
+        validatePlan(response.plan);
     }
     if (!result.blob.etag) throw new Error('Missing storage version');
     return { document, etag: result.blob.etag };
@@ -63,6 +64,23 @@ export function createBlobResponseStore({
   }
 
   return {
+    decline(id) {
+      if (
+        !/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+          id,
+        )
+      )
+        throw new Error('Invalid visitor id');
+      return update((document) => {
+        const response = {
+          outcome: 'declined',
+          plan: null,
+          updatedAt: new Date().toISOString(),
+        };
+        document.responses[id] = response;
+        return response;
+      });
+    },
     async get(id) {
       return (await read()).document.responses[id] ?? null;
     },

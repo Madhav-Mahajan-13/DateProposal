@@ -85,7 +85,7 @@ export default function Mascot({ step, outcome, nearDecline }: MascotProps) {
     : outcome === 'accepted'
       ? {
           feeling: 'one happy wingdog',
-          message: 'A date! I knew my human had good taste.',
+          message: 'You’re going out! My human will be so happy.',
           greeting: 'best. day. ever.',
         }
       : outcome === 'declined'

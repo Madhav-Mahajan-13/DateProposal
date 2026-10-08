@@ -123,6 +123,32 @@ test('clearing requires confirmation, persists on disk, and resets prefill', asy
   assert.equal((await save(restarted, cookie, plan)).status, 200);
 });
 
+test('final no persists in admin, replaces an old plan, and can later become a yes', async (t) => {
+  const { base, start } = await setup(t);
+  const { cookie } = await visit(base);
+  await save(base, cookie, plan);
+  const declined = await save(base, cookie, { outcome: 'declined' });
+  assert.equal(declined.status, 200);
+  assert.equal((await declined.json()).response.outcome, 'declined');
+  const restarted = await start();
+  const entries = (
+    await (await fetch(`${restarted}/api/admin-44444/entries`)).json()
+  ).entries;
+  assert.equal(entries.length, 1);
+  assert.equal(entries[0].outcome, 'declined');
+  assert.equal(entries[0].plan, null);
+  const restored = await fetch(`${restarted}/api/response`, {
+    headers: { Cookie: cookie },
+  });
+  assert.equal((await restored.json()).response.outcome, 'declined');
+  assert.equal((await save(restarted, cookie, plan)).status, 200);
+  const changed = (
+    await (await fetch(`${restarted}/api/admin-44444/entries`)).json()
+  ).entries;
+  assert.equal(changed.length, 1);
+  assert.deepEqual(changed[0].plan, plan);
+});
+
 test('saves to disk, restores after server restart, and updates the same visitor', async (t) => {
   const { base, filePath, start } = await setup(t);
   const { cookie, body } = await visit(base);

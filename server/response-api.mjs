@@ -92,6 +92,7 @@ export function createResponseStore(filePath) {
       )
         throw new Error('Invalid saved response');
       try {
+        if (response.outcome === 'declined' && response.plan === null) continue;
         validatePlan(response.plan);
       } catch {
         throw new Error('Invalid saved plan');
@@ -113,6 +114,20 @@ export function createResponseStore(filePath) {
   }
 
   return {
+    decline(id) {
+      return serial(async () => {
+        if (!sessionPattern.test(id)) throw new Error('Invalid visitor id');
+        const store = await readStore();
+        const response = {
+          outcome: 'declined',
+          plan: null,
+          updatedAt: new Date().toISOString(),
+        };
+        store.responses[id] = response;
+        await writeStore(store);
+        return response;
+      });
+    },
     clear() {
       return serial(async () => {
         await readStore();
@@ -265,7 +280,11 @@ export function createResponseApi({
       const response =
         req.method === 'GET'
           ? await store.get(id)
-          : await store.save(id, await readBody(req));
+          : await (async () => {
+              const body = await readBody(req);
+              if (body?.outcome === 'declined') return store.decline(id);
+              return store.save(id, body);
+            })();
       json(res, 200, { response });
     })().catch((error) => {
       if (res.destroyed || res.writableEnded) return;

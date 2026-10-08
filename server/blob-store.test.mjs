@@ -58,6 +58,10 @@ test('independent cloud instances preserve concurrent saves and share clear/pref
   assert.equal((await fresh.get(ids[2])).plan.place, 'Spot 2');
   await fresh.save(ids[2], plan);
   assert.equal((await fresh.list()).length, 4);
+  await fresh.decline(ids[2]);
+  assert.equal((await stores[0].get(ids[2])).outcome, 'declined');
+  assert.equal((await stores[0].get(ids[2])).plan, null);
+  assert.equal((await fresh.list()).length, 4);
   await fresh.clear();
   assert.deepEqual(await stores[0].list(), []);
   assert.equal(await stores[1].get(ids[2]), null);

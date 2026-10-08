@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import type { SavedDatePlan } from '../lib/datePlanApi';
+import type { SavedResponse } from '../lib/datePlanApi';
 import './admin.css';
 
 function formatDate(value: string, includeTime = false) {
@@ -12,7 +12,7 @@ function formatDate(value: string, includeTime = false) {
 }
 
 export default function AdminPage() {
-  const [entries, setEntries] = useState<SavedDatePlan[]>([]);
+  const [entries, setEntries] = useState<SavedResponse[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [revision, setRevision] = useState(0);
@@ -62,7 +62,7 @@ export default function AdminPage() {
     })
       .then(async (response) => {
         if (!response.ok) throw new Error('Could not load entries');
-        const data: { entries: SavedDatePlan[] } = await response.json();
+        const data: { entries: SavedResponse[] } = await response.json();
         if (!controller.signal.aborted) setEntries(data.entries);
       })
       .catch(() => {
@@ -88,7 +88,7 @@ export default function AdminPage() {
           <div>
             <span className="eyebrow">THE NEXT CHAPTER</span>
             <h1>
-              Her little <em>plans.</em>
+              Her little <em>answers.</em>
             </h1>
             <p>All the lovely details, saved in one place.</p>
           </div>
@@ -129,15 +129,18 @@ export default function AdminPage() {
           <section className="admin-empty">
             <span aria-hidden="true">♡</span>
             <h2>A little anticipation.</h2>
-            <p>When she saves her plan, her answers will appear here.</p>
+            <p>Her saved plan or final no will appear here.</p>
           </section>
         )}
         <div className="admin-entries" aria-busy={loading}>
-          {entries.map(({ plan, updatedAt }, index) => (
+          {entries.map(({ plan, updatedAt, outcome }, index) => (
             <article className="admin-entry" key={`${updatedAt}-${index}`}>
               <div className="admin-entry-heading">
                 <h2>
-                  A date, her way <span aria-hidden="true">♡</span>
+                  {outcome === 'declined'
+                    ? 'She said no, thank you'
+                    : 'She said yes to going out'}{' '}
+                  <span aria-hidden="true">♡</span>
                 </h2>
                 <p>
                   Last saved{' '}
@@ -146,41 +149,49 @@ export default function AdminPage() {
                   </time>
                 </p>
               </div>
-              <dl>
-                <div className="admin-wide">
-                  <dt>On the menu</dt>
-                  <dd>
-                    {plan.foods.length
-                      ? plan.foods.map((food) => (
-                          <span className="admin-food" key={food}>
-                            {food}
-                          </span>
-                        ))
-                      : 'Surprise me'}
-                  </dd>
-                </div>
-                <div>
-                  <dt>A day that feels right</dt>
-                  <dd>
-                    {plan.day ? formatDate(plan.day) : 'Let’s choose together'}
-                  </dd>
-                </div>
-                <div>
-                  <dt>And the time?</dt>
-                  <dd>{plan.time || 'Flexible'}</dd>
-                </div>
-                <div className="admin-wide">
-                  <dt>Her favorite little spot</dt>
-                  <dd>{plan.place.trim() || 'Let’s choose together'}</dd>
-                </div>
-                <div className="admin-wide admin-itinerary">
-                  <dt>Her perfect little itinerary</dt>
-                  <dd>
-                    {plan.itinerary.trim() ||
-                      'Surprise me — we’ll figure out the details together.'}
-                  </dd>
-                </div>
-              </dl>
+              {plan ? (
+                <dl>
+                  <div className="admin-wide">
+                    <dt>On the menu</dt>
+                    <dd>
+                      {plan.foods.length
+                        ? plan.foods.map((food) => (
+                            <span className="admin-food" key={food}>
+                              {food}
+                            </span>
+                          ))
+                        : 'Surprise me'}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>A day that feels right</dt>
+                    <dd>
+                      {plan.day
+                        ? formatDate(plan.day)
+                        : 'Let’s choose together'}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>And the time?</dt>
+                    <dd>{plan.time || 'Flexible'}</dd>
+                  </div>
+                  <div className="admin-wide">
+                    <dt>Her favorite little spot</dt>
+                    <dd>{plan.place.trim() || 'Let’s choose together'}</dd>
+                  </div>
+                  <div className="admin-wide admin-itinerary">
+                    <dt>Her perfect little itinerary</dt>
+                    <dd>
+                      {plan.itinerary.trim() ||
+                        'Surprise me — we’ll figure out the details together.'}
+                    </dd>
+                  </div>
+                </dl>
+              ) : (
+                <p>
+                  She chose “Still no, thank you.” No outing plan was submitted.
+                </p>
+              )}
             </article>
           ))}
         </div>

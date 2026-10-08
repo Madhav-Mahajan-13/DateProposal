@@ -76,7 +76,7 @@ The JSON file is created automatically, excluded from Git, and blocked from publ
 
 ## View saved entries
 
-Open `/admin-44444` to view saved plans, newest updates first. The page displays food choices, day, time, place, itinerary, and last saved time. Use **Refresh entries** to check for changes. **Clear all entries** asks for confirmation, then permanently empties the saved responses and removes their prefill on the next form load. It reads the same response store through `GET /api/admin-44444/entries` and does not expose visitor cookie identifiers. There is no login: anyone with this URL can view or clear the entries. The invitation does not link to it.
+Open `/admin-44444` to view saved answers, newest updates first. A final "Still no, thank you" is saved automatically as a declined response with its timestamp; the first No only opens the puppy appeal. Declined responses replace any previous plan for that browser. Saving a plan later replaces the No. Existing saved plans remain compatible. The declined ending shows save status and a retry button if storage is unavailable. The page displays food choices, day, time, place, itinerary, and last saved time. Use **Refresh entries** to check for changes. **Clear all entries** asks for confirmation, then permanently empties the saved responses and removes their prefill on the next form load. It reads the same response store through `GET /api/admin-44444/entries` and does not expose visitor cookie identifiers. There is no login: anyone with this URL can view or clear the entries. The invitation does not link to it.
 
 ## Deploy to Vercel
 
