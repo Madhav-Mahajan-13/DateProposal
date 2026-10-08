@@ -1,0 +1,16 @@
+node_modules/
+dist/
+.npm-cache/
+.cache/
+*.local
+*.log
+*.tsbuildinfo
+.env
+.env.*
+!.env.example
+artifacts/browser-profile/
+.DS_Store
+.vscode/*
+!.vscode/extensions.json
+data/responses.json
+data/*.tmp

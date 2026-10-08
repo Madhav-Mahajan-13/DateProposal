@@ -1,0 +1,9 @@
+{
+  "method": "Built-in image_gen tool",
+  "asset": "white-rose.png",
+  "reference": "biscuit-body.png (art style only)",
+  "prompts": [
+    "Use case: stylized-concept. Asset type: transparent flower prop for an animated website dog mascot. Generate ONE elegant WHITE ROSE, using the attached puppy image ONLY as an art-style reference for soft warm gouache shading and fine organic pencil texture. Do not include the dog. A single fully open WHITE rose blossom with clearly layered silky WHITE petals, subtle ivory and pale grey shadows, a slim natural green stem, two small sage green leaves. Pure white flower, absolutely no pink, red or yellow petals. Upright botanical composition, full blossom near upper center, long slender stem extending down almost vertically, slightly leaning to the right at the bottom. Entire rose and stem visible with generous transparent margin, portrait 2:3 canvas. The flower should read beautifully at small website size, medium broad bloom about 65 percent of canvas width, stem spans lower two thirds of image. Sweet romantic illustrated stationery look matching the supplied storybook puppy. True transparent background. No vase, ribbon, wrapping, hands, extra flowers, ground shadow, text, or hearts.",
+    "Use case: background-extraction. Edit this single white rose asset. Keep the exact white rose petals, stem and leaves and their positions. REMOVE ALL of the large fuzzy glowing halo / blurred backdrop surrounding the flower, leaves and stem. Every pixel outside the actual crisp petal, leaf and stem silhouette must be completely transparent (alpha 0). No soft glow, no bloom, no haze, no shadow, no white or green aura, no colored backdrop. Preserve the opaque white flower itself and opaque green leaves and stem. Clean cutout, antialiased edges only. Preserve framing, illustration style, canvas size, and flower identity."
+  ]
+}

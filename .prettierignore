@@ -1,0 +1,9 @@
+node_modules
+dist
+.npm-cache
+.cache
+artifacts
+public
+package-lock.json
+data/responses.json
+data/*.tmp

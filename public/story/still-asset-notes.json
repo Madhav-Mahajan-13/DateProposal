@@ -1,0 +1,15 @@
+{
+  "mode": "built-in image_gen",
+  "assets": [
+    {
+      "file": "him-letter-still.png",
+      "source": "artifacts/him-standing-with-a-letter-Character-Sheet.png",
+      "prompt": "Use case: background-extraction. Asset type: one transparent full-body character cutout for a still-frame visual novel website. Input 1 is the edit target: the supplied male character sheet. Extract/reproduce ONLY the THIRD full-body pose in the TOP ROW: the shy adult man facing forward, both hands holding a small white envelope with a tiny coral heart at chest height, raised shoulders, blushing face, rectangular black glasses. Preserve exactly the reference character's identity, messy black hair, olive green T-shirt, black shorts, white socks, white sneakers, proportions, hand pose, facial expression, delicate anime outlines and original coloring. One figure only, complete head to shoes, centered on a tall portrait canvas with narrow transparent margins. Make the figure occupy 92% of image height. GENUINELY TRANSPARENT background. Keep the envelope, socks, sneakers, skin and whites inside the character fully opaque. No floor, no cast shadow, no white rectangle, no other poses, no duplicate characters, no text, no new props, no redesign. This is a faithful asset extraction, not a new character design."
+    },
+    {
+      "file": "corridor-wide.png",
+      "source": "artifacts/corridor1.png",
+      "processing": "Unchanged original photograph. The room plaque is rendered as a static SVG overlay in index.html; warm grading uses CSS."
+    }
+  ]
+}

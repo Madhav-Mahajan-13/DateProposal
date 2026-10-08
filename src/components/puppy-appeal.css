@@ -1,0 +1,79 @@
+.scene.scene--appeal {
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 530px;
+}
+.scene--appeal .mascot-home {
+  display: none;
+}
+.scene--appeal .note {
+  transform: none;
+  scroll-margin-top: 20px;
+}
+.puppy-appeal {
+  padding-top: 23px;
+  text-align: center;
+}
+.appeal-portrait {
+  position: relative;
+  margin: 7px auto 5px;
+}
+.appeal-dog {
+  display: block;
+  width: 220px;
+  max-width: 75%;
+  height: auto;
+  margin: auto;
+  transform-origin: top left;
+  position: relative;
+  z-index: 4;
+  filter: drop-shadow(0 7px 7px #8e775218);
+}
+.appeal-whisper {
+  position: absolute;
+  left: 0;
+  top: 28%;
+  width: 95px;
+  font-size: 22px;
+  transform: rotate(-9deg);
+}
+.puppy-appeal h2 {
+  margin: 12px 0;
+  font-size: 31px;
+}
+.puppy-appeal .lead {
+  font-size: 19px;
+}
+.puppy-appeal .aside {
+  margin-bottom: 20px;
+}
+.appeal-actions {
+  text-align: left;
+}
+.appeal-reassurance {
+  margin: 17px 0 2px;
+  font-size: 10px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+@media (max-width: 650px) {
+  .scene.scene--appeal {
+    margin-top: 30px;
+  }
+  .appeal-dog {
+    width: 200px;
+  }
+  .appeal-whisper {
+    font-size: 19px;
+    width: 75px;
+    left: -9px;
+  }
+  .puppy-appeal h2 {
+    font-size: 28px;
+  }
+  .puppy-appeal .lead {
+    font-size: 18px;
+  }
+  .appeal-actions {
+    flex-direction: column;
+  }
+}

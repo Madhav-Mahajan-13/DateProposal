@@ -1,0 +1,22 @@
+{
+  "method": "Built-in image_gen tool",
+  "assets": [
+    {
+      "file": "biscuit-body.png",
+      "prompt": "Use case: precise-object-edit. Edit the provided transparent golden puppy image for a layered website animation. Preserve EXACT canvas dimensions 1254x1254, exact puppy placement, scale, identity, head and ears, eyes, open mouth, red bandana, all four limbs and raised waving paw, every feature and original gouache/pencil texture. ONLY remove the fluffy tail which sticks out on the viewer's right beside his lower torso. Fill that removed region with true transparency. Smoothly finish the right hip's fur silhouette where the tail was attached. Leave his right rear haunch and feet intact. The result must be the SAME full puppy, same face and same pose and same framing, simply with NO VISIBLE TAIL. Do not change background transparency, add shadow, crop, recenter, resize or redesign. No text."
+    },
+    {
+      "file": "biscuit-tail.png",
+      "prompt": "Use case: background-extraction. The supplied image is the identity reference for Biscuit, a golden retriever puppy. Create an isolated animation part: ONLY the puppy's fluffy golden tail from the viewer's right side, extracted/reproduced from the reference with identical golden gouache/pencil fur texture. Nothing else: no puppy body, no head, no feet, no bandana. Tail is a broad fluffy curved plume sweeping FROM a short thick rounded root at the LOWER LEFT up and around toward an upward pointed tuft at the UPPER RIGHT. Match the silhouette and golden shaded fur of the existing tail on the reference. The root must be thick enough to hide behind the puppy's hip. Center the entire tail in a square transparent canvas, roughly 15 percent transparent padding, all fur tips visible. True transparent background. No text, no shadow, no extra elements."
+    },
+    {
+      "file": "biscuit-happy.png",
+      "prompt": "Use case: precise-object-edit. Edit the provided Biscuit puppy image. Change ONLY his two eyes: close BOTH eyes in a blissfully happy relaxed expression, two natural curved dark eyelid lines with golden fur covering the eyeballs. Keep the exact same happy open mouth. Preserve EVERYTHING ELSE exactly: same golden retriever identity, fur texture, ears, head outline, nose, mouth, red bandana, raised paw, seated body, no visible tail, exact same square canvas size and pixel registration. Do NOT shift, resize, recenter or alter the head, body or any features other than the eyes. This is an animation frame and must align with original. Preserve transparent background. No new objects or text."
+    },
+    {
+      "file": "biscuit-wink.png",
+      "prompt": "Use case: precise-object-edit. Edit the provided Biscuit puppy image. Change ONLY the eye on the VIEWER'S RIGHT: close that one eye in a playful charming wink, natural curved dark eyelid with golden fur covering eyeball. Leave viewer's LEFT eye fully open and unchanged. Preserve EVERYTHING ELSE exactly: same golden retriever identity, fur texture, ears, head outline, nose, smiling open mouth, red bandana, raised paw, seated body, no visible tail, exact same square canvas size and pixel registration. Do NOT shift, resize, recenter or alter the head, body or any features other than the single eye on viewer's right. This is an animation frame and must align with original. Preserve transparent background. No new objects or text."
+    }
+  ],
+  "rendering": "CSS layers: independent tail behind body, feathered face overlay for blinking/happy/wink. Originals retained."
+}

@@ -1,0 +1,6 @@
+{
+  "method": "Built-in image_gen tool",
+  "asset": "biscuit-sad.png",
+  "reference": "biscuit-body.png",
+  "prompt": "Use case: precise-object-edit. Edit this transparent Biscuit golden retriever puppy into ONE mildly sad puppy-dog-eyes expression frame for a website. Preserve EXACT same square canvas, position, body, silhouette, raised paw, fur texture, red bandana, no tail, ears, nose placement and head angle. Change ONLY facial expression: big soft eyes with inner eyebrows raised slightly in a wistful, a-little-disappointed look; close the currently smiling mouth, remove the visible tongue, create a small gently downturned closed mouth, natural cream-furred chin. Both eyes stay open. Subtle and adorable sadness, no tears, no crying, no exaggerated distress. DO NOT move or resize the head, change body proportions, lower the paw, add objects or text. The resulting face must align exactly over the original in a layered animation. Keep true background transparency and same warm gouache/pencil illustration style."
+}

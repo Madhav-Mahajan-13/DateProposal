@@ -1,0 +1,31 @@
+{
+  "mode": "built-in image_gen",
+  "assets": [
+    {
+      "file": "her-poses-transparent.png",
+      "source": [
+        "artifacts/her poses.png",
+        "artifacts/Door_opening_and_peeking.png",
+        "artifacts/Anime Character Pose and Expression Sheet 2.png"
+      ],
+      "prompt": "Use case: background-extraction. Asset type: transparent character sprite atlas for an illustrated interactive story. Input 1 is the edit target: the user's supplied 'her poses.png'. Inputs 2 and 3 are supporting references for exactly the same adult woman, age 22, her white loose button-up shirt, white shorts and white socks, long wavy brown hair, brown eyes, delicate anime illustration style. Preserve her identity, exact outfit, soft line art and warm watercolor-like shading. Extract/reproduce FOUR isolated full-body poses from the references on a GENUINELY TRANSPARENT background. Arrange in ONE horizontal row of FOUR equally sized cells, each figure centered in its own cell, all heads at the same height and feet at the same baseline, no overlapping cells, generous transparent padding. Left to right: (1) back view, looking toward a door with right hand slightly raised as in the first pose of input 1, no door; (2) three-quarter turn looking back shyly/curiously as in right pose of input 2, hands gently clasped, eyes open; (3) front view with head tipped down slightly, eyes softly closed and hands clasped as in second pose of input 1; (4) front/three-quarter curious expression, looking slightly downward, arms relaxed, as in fourth pose of input 1. Layout 2048x1024 landscape if possible, each pose in its own 512x1024 quarter. Keep full hair and socked feet inside every cell. No doors, no background, no floor, no ground shadows, no male character, no letters, no text, no cell borders. Whites of shirt and socks must remain opaque; ONLY the surrounding background is transparent. This is an asset extraction request, not a redesign. Keep the charming hand-drawn anime appearance."
+    },
+    {
+      "file": "nervous-hands.png",
+      "source": [
+        "artifacts/Anime Character Pose and Expression Sheet 2.png"
+      ],
+      "prompt": "Use case: illustration-story. Asset type: transparent foreground layer for a romantic illustrated story. Reference: the adult male character in the supplied image, with olive green T-shirt, natural light warm skin, delicate anime line art and warm shading. Create ONLY a first-person view of his two adult hands and bare forearms entering from the bottom left and bottom right, relaxed fingers gently bent with a little nervous tension, palms angled slightly toward each other, anatomically correct five fingers per hand. No person, no face, no torso, no clothing, no props, no letter. Composition landscape 1536x1024 if possible, hands at bottom half, left and right hands separated by generous completely transparent space in the middle, fingertips point slightly upward and inward; forearms cropped only at the bottom edge. Foreground sprite for an anime visual novel. Match the fine line quality and skin coloring of the reference. All surrounding background genuinely transparent. No ground, no shadow, no white background, no text. Natural adult anatomy, subtle pose, no exaggerated chibi proportions."
+    },
+    {
+      "file": "corridor-wide.png",
+      "source": "artifacts/corridor1.png",
+      "processing": "Original copied unchanged; framing and warm light are applied at runtime."
+    },
+    {
+      "file": "corridor-deep.png",
+      "source": "artifacts/corridor-2.png",
+      "processing": "Original copied unchanged; framing and warm light are applied at runtime."
+    }
+  ]
+}

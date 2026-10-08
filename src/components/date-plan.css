@@ -1,0 +1,332 @@
+.scene.scene--planning {
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.25fr);
+  max-width: 1100px;
+  align-items: start;
+  gap: 40px;
+}
+.scene--planning .mascot-home {
+  position: sticky;
+  top: 28px;
+  padding-top: 45px;
+}
+.scene--planning .note {
+  transform: none;
+}
+.date-plan {
+  padding-top: 23px;
+}
+.plan-kicker {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.plan-kicker > span:last-child {
+  color: var(--red);
+  font-size: 24px;
+}
+.date-plan h2 {
+  margin: 11px 0 13px;
+  font-size: 34px;
+  scroll-margin-top: 24px;
+}
+.plan-intro {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.8;
+  margin: 0 0 25px;
+}
+.date-plan-form {
+  display: grid;
+  gap: 22px;
+}
+.plan-inputs {
+  display: grid;
+  gap: 22px;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  min-width: 0;
+}
+.plan-inputs:disabled {
+  opacity: 0.65;
+}
+.plan-storage-status {
+  padding: 11px 13px;
+  margin: -7px 0 20px;
+  background: #edf0e2;
+  border-radius: 7px;
+  color: #626c46;
+  font-size: 11px;
+  line-height: 1.7;
+}
+.plan-storage-error {
+  color: #99432f;
+  background: #fbede5;
+  padding: 12px;
+  border-radius: 7px;
+  font-size: 12px;
+  line-height: 1.7;
+  margin: 0 0 15px;
+}
+.plan-storage-error button {
+  display: block;
+  min-height: 44px;
+  margin-top: 8px;
+  padding: 8px 16px;
+  border: 1px solid #bc8971;
+  border-radius: 5px;
+  background: #fffcf6;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+.food-fieldset {
+  padding: 0;
+  margin: 0;
+  border: 0;
+  min-width: 0;
+}
+.food-fieldset legend,
+.plan-label,
+.plan-field > span {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+.field-hint {
+  font-size: 10px;
+  line-height: 1.6;
+  color: var(--muted);
+  margin: 5px 0 12px;
+}
+.food-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+.food-option {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: 13px 9px;
+  border: 1px solid #e1d8c8;
+  border-radius: 9px;
+  background: #faf6ec;
+  min-width: 0;
+  transition:
+    background 160ms,
+    border-color 160ms;
+}
+.food-option:hover {
+  border-color: #b99072;
+}
+.food-option.is-selected {
+  border-color: #b5785f;
+  background: #f2e2d4;
+}
+.food-option input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+.food-option:focus-within {
+  outline: 3px solid #af8054;
+  outline-offset: 3px;
+}
+.food-check {
+  width: 21px;
+  height: 21px;
+  border: 1px solid #d8c5af;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #9b6246;
+  font-size: 13px;
+  margin-bottom: 3px;
+}
+.is-selected .food-check {
+  background: var(--red);
+  border-color: var(--red);
+  color: white;
+}
+.food-name {
+  font: 500 16px var(--serif);
+}
+.food-detail {
+  font-size: 9px;
+  line-height: 1.5;
+  color: #81715c;
+}
+.plan-field-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 13px;
+}
+.plan-field {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+.plan-field > span {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px;
+}
+.plan-field .handwritten {
+  font-size: 19px;
+  font-weight: 400;
+  color: var(--red);
+}
+.plan-field input,
+.plan-field select,
+.plan-field textarea,
+.date-reply {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  min-height: 46px;
+  border: 1px solid #dfd6c6;
+  border-radius: 7px;
+  background: #fffef9;
+  padding: 12px;
+  color: var(--ink);
+  font: 400 13px/1.6 var(--sans);
+}
+.plan-field textarea,
+.date-reply {
+  resize: vertical;
+}
+.plan-field input::placeholder,
+.plan-field textarea::placeholder {
+  color: #9a8b79;
+  opacity: 1;
+}
+.plan-field input:focus-visible,
+.plan-field select:focus-visible,
+.plan-field textarea:focus-visible,
+.date-reply:focus-visible {
+  outline: 2px solid #af8054;
+  outline-offset: 3px;
+}
+.plan-optional {
+  margin: -7px 0 -5px;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.7;
+}
+.plan-actions {
+  gap: 10px;
+}
+.plan-actions .primary {
+  min-height: 48px;
+}
+.plan-delivery-note {
+  color: var(--muted);
+  text-align: center;
+  font-size: 10px;
+  line-height: 1.6;
+  margin: -9px 0 0;
+}
+.reply-envelope {
+  padding: 18px;
+  border: 1px dashed #cbb493;
+  background: #f9f1e2;
+  border-radius: 8px;
+  margin: 20px 0;
+}
+.reply-caption {
+  display: block;
+  font-size: 23px;
+  color: var(--red);
+  margin: 0 0 14px;
+}
+.reply-envelope label {
+  display: block;
+  margin-bottom: 8px;
+}
+.date-reply {
+  min-height: 280px;
+  font-size: 12px;
+  line-height: 1.8;
+}
+.copy-status {
+  min-height: 22px;
+  font-size: 11px;
+  line-height: 1.6;
+  color: #6d754e;
+  margin: 12px 0 10px;
+}
+.plan-restart {
+  display: block;
+  min-height: 44px;
+  margin: 10px auto 0;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font: 11px var(--sans);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+@media (max-width: 900px) {
+  .scene.scene--planning {
+    gap: 24px;
+    grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
+  }
+  .scene--planning .dog-button {
+    width: 260px;
+  }
+  .scene--planning .pet-controls {
+    flex-wrap: wrap;
+  }
+  .scene--planning .name-tag {
+    letter-spacing: 0.5px;
+    font-size: 9px;
+  }
+}
+@media (max-width: 650px) {
+  .scene.scene--planning {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .scene--planning .mascot-home {
+    position: static;
+    padding-top: 0;
+  }
+  .scene--planning .dog-button {
+    width: 190px;
+  }
+  .date-plan h2 {
+    font-size: 30px;
+  }
+  .plan-field input,
+  .plan-field select,
+  .plan-field textarea {
+    font-size: 16px;
+  }
+  .food-option {
+    padding: 11px 7px;
+  }
+  .food-name {
+    font-size: 15px;
+  }
+  .food-detail {
+    font-size: 8px;
+  }
+  .plan-field-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .plan-intro {
+    font-size: 12px;
+  }
+  .reply-envelope {
+    padding: 12px;
+  }
+}
