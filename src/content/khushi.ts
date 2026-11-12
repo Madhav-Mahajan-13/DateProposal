@@ -85,8 +85,12 @@ export const beats: Beat[] = [
       m('things haven’t really been okay between you two lately, na', 'sad'),
       m('not fighting-bad. just… dry'),
       m(
-        'the texts got shorter. the gaps got longer. and nobody really said anything about it',
+        'and it’s not anyone’s fault. you’re both at home, and you can’t exactly talk with family around',
       ),
+      m('so it’s been texts. just texts. for days'),
+      m('and texts are nice but…'),
+      m('he really misses your voice 🥺', 'teary'),
+      m('like, a lot. he won’t say it, so i’m saying it', 'sad'),
       m(
         'and the distance makes it so much harder. one day feels fine and the next day it just doesn’t',
       ),
