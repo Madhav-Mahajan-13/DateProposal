@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node \"C:/Users/Madhav/AppData/Local/Temp/claude/7f49b01bcb570838/2bfcd03f-115d-4eea-a3b0-5acb36fdd948/scratchpad/pw/walk.mjs\" \"C:/Users/Madhav/AppData/Local/Temp/claude/7f49b01bcb570838/2bfcd03f-115d-4eea-a3b0-5acb36fdd948/scratchpad\")",
+      "PowerShell(Get-NetTCPConnection -LocalPort 3123 -State Listen -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.OwningProcess -Confirm:$false }; Remove-Item \"$env:TEMP\\\\khushi-test.json\" -ErrorAction SilentlyContinue; \"done\")"
+    ]
+  }
+}

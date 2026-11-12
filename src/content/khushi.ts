@@ -1,115 +1,251 @@
-// Biscuit's letter to Khushi. Edit the words here; the page reads from this file.
-export type KhushiMood =
-  'hello' | 'wistful' | 'gentle' | 'listening' | 'rose' | 'wink' | 'warm';
-
-export interface KhushiStep {
-  id: string;
-  chapter: string;
-  title: string;
-  lead: string;
-  aside: string;
-  button: string;
-  footnote: string;
-  mood: KhushiMood;
-  bubble: string; // Biscuit's little handwritten line beside him
-  checkIn?: true;
-  bouquet?: true;
-}
+// Biscuit's little journey with Khushi. Edit any words here; the page reads
+// from this file. Each "beat" is a chapter: a few lines from Biscuit (with
+// optional little interactions), then a way for her to reply.
 
 export const herName = 'Khushi';
 
-export const khushiStory: KhushiStep[] = [
+export type Mood = 'happy' | 'open' | 'sad' | 'teary' | 'wink';
+// The sky slowly brightens as the story goes on.
+export type Sky = 'night' | 'storm' | 'dusk' | 'dawn' | 'morning';
+
+export interface BiscuitMessage {
+  text: string;
+  mood?: Mood;
+}
+
+// Small things she does to keep the story going.
+export interface Gate {
+  gate: 'tears' | 'roses';
+  prompt: string;
+}
+
+export type Item = BiscuitMessage | Gate;
+
+export interface ReplyOption {
+  label: string; // what she "says" when she taps it
+  followUp?: BiscuitMessage[]; // Biscuit's answer to this specific reply
+}
+
+export type Reply =
+  | { kind: 'chips'; options: ReplyOption[] }
+  | {
+      kind: 'note';
+      placeholder: string;
+      skip: ReplyOption;
+      thanks: BiscuitMessage[];
+      failed: BiscuitMessage[];
+    }
+  | {
+      kind: 'hug';
+      label: string;
+      prompt: string;
+      followUp: BiscuitMessage[];
+    };
+
+export interface Beat {
+  sky: Sky;
+  messages: Item[];
+  reply: Reply;
+}
+
+const m = (text: string, mood?: Mood): BiscuitMessage => ({ text, mood });
+
+export const envelope = {
+  to: `for ${herName.toLowerCase()} 🤍`,
+  from: 'from biscuit (and someone a little shy)',
+  open: 'open it',
+};
+
+export const beats: Beat[] = [
   {
-    id: 'hello',
-    chapter: '01 / A FAMILIAR TAIL',
-    title: `Hi ${herName}. It’s me, Biscuit.`,
-    lead: 'Same floppy ears, same waggy tail — just a slightly more serious delivery today.',
-    aside: 'I’ll keep it short. Mostly.\nPinky paw promise.',
-    button: 'Hi, Biscuit',
-    footnote: 'sniff sniff… is that lilac?',
-    mood: 'hello',
-    bubble: 'hi khushi!',
+    sky: 'night',
+    messages: [
+      m('khushiii 🐾', 'happy'),
+      m('it’s me. biscuit.'),
+      m(
+        'okay so i’ve been holding onto this for a few days and my paws are getting tired',
+        'open',
+      ),
+      m('can i say something? it’s a little long. sorry in advance'),
+    ],
+    reply: {
+      kind: 'chips',
+      options: [
+        { label: 'of course, biscuit' },
+        {
+          label: 'hmm… okay',
+          followUp: [m('thank you. i’ll be gentle, promise')],
+        },
+      ],
+    },
   },
   {
-    id: 'quiet',
-    chapter: '02 / THE QUIET PART',
-    title: 'Things have felt a little far lately.',
-    lead: 'Not the loud kind of rough. More like a quiet that settled in — and quiet can be harder than a fight.',
-    aside:
-      'The miles in between haven’t helped.\nNeither have all the highs and lows back to back.',
-    button: 'Yeah… it has',
-    footnote: 'Dogs notice these things. We just do.',
-    mood: 'wistful',
-    bubble: 'i noticed…',
+    sky: 'storm',
+    messages: [
+      m('things haven’t really been okay between you two lately, na', 'sad'),
+      m('not fighting-bad. just… dry'),
+      m(
+        'the texts got shorter. the gaps got longer. and nobody really said anything about it',
+      ),
+      m(
+        'and the distance makes it so much harder. one day feels fine and the next day it just doesn’t',
+      ),
+      m('i noticed. i’m a dog, we notice everything 🥺'),
+    ],
+    reply: {
+      kind: 'chips',
+      options: [
+        { label: 'yeah… it’s been like that' },
+        { label: 'i didn’t think anyone noticed' },
+      ],
+    },
   },
   {
-    id: 'him',
-    chapter: '03 / HIS SIDE OF THINGS',
-    title: 'He talks before he thinks.',
-    lead: 'Sometimes he shows off, says a little too much, and it lands on you in a way he never meant it to.',
-    aside:
-      'He knows some of it hurt. That part is on him.\nBut under all that noise? He really, truly likes you.',
-    button: 'Go on',
-    footnote: 'I’ve told him to work on it. Sternly. With one bark.',
-    mood: 'gentle',
-    bubble: 'he means well',
+    sky: 'storm',
+    messages: [
+      m('and honestly, a lot of it is on him', 'sad'),
+      m(
+        'he talks too much sometimes. shows off. says things before he even thinks about them',
+      ),
+      m(
+        'and some of that hurt you. i know it did. he knows it too, and it sits with him more than he shows',
+        'teary',
+      ),
+      { gate: 'tears', prompt: 'he’s a bit teary… rub his head gently?' },
+      m('but khushi…', 'open'),
+      m(
+        'he likes you. like, really really likes you. he’s just terrible at saying it the right way',
+        'happy',
+      ),
+    ],
+    reply: {
+      kind: 'chips',
+      options: [
+        { label: '…okay' },
+        {
+          label: 'he could’ve said this himself',
+          followUp: [
+            m('you’re right. he should have', 'sad'),
+            m(
+              'he gets nervous and his words come out all wrong. so he asked me to help him start. he’ll say the rest himself, i promise',
+            ),
+          ],
+        },
+      ],
+    },
   },
   {
-    id: 'check-in',
-    chapter: '04 / WAIT, I SKIPPED THE IMPORTANT BIT',
-    title: 'How are you, really?',
-    lead: 'Not “I’m good.” Not “I’m okay.” The real answer.',
-    aside:
-      'Is anything sitting heavy on your heart, or just feeling off?\nWrite as much or as little as you like — or nothing at all.',
-    button: 'Maybe another time',
-    footnote: 'Only he will read this. No one else.',
-    mood: 'listening',
-    bubble: 'all ears',
-    checkIn: true,
+    sky: 'dusk',
+    messages: [
+      m('wait wait wait', 'open'),
+      m('i’ve been talking this whole time and i didn’t even ask you'),
+      m('how are you?', 'sad'),
+      m(
+        'and not the “i’m fine” one. the real one. is something bothering you? anything feeling heavy lately?',
+      ),
+      m(
+        'you can tell me anything. only he will read it, no one else. and if you don’t feel like it, that’s okay too 🤍',
+      ),
+    ],
+    reply: {
+      kind: 'note',
+      placeholder: 'honestly? i’ve been…',
+      skip: {
+        label: 'not right now',
+        followUp: [
+          m('that’s okay. really', 'open'),
+          m('whenever you feel like it, i’m right here'),
+        ],
+      },
+      thanks: [
+        m('thank you for telling me 🤍', 'teary'),
+        m(
+          'i know that’s not always easy. he’ll read every single word, carefully',
+        ),
+      ],
+      failed: [
+        m(
+          'oh no, my paw slipped and it didn’t send 🥺 can you try once more?',
+          'sad',
+        ),
+      ],
+    },
   },
   {
-    id: 'roses',
-    chapter: '05 / OOPS',
-    title: 'I almost forgot your flowers!',
-    lead: 'White roses. Your favourite — he made me double-check twice.',
-    aside:
-      'I carried them all the way here in my mouth.\nOnly sniffed one. Okay, two.',
-    button: 'Aww, Biscuit',
-    footnote: 'Yours to keep. No reason needed.',
-    mood: 'rose',
-    bubble: 'for you ♡',
-    bouquet: true,
+    sky: 'dawn',
+    messages: [
+      m('OH NO', 'open'),
+      m('i completely forgot the most important part'),
+      { gate: 'roses', prompt: 'i dropped them everywhere 🙈 pick them up?' },
+      m('white roses. your favourite', 'happy'),
+      m(
+        'he made me check like five times that i got the right ones. i carried them the whole way. only sniffed one. okay two',
+      ),
+    ],
+    reply: {
+      kind: 'chips',
+      options: [
+        { label: 'aww biscuit 🤍' },
+        {
+          label: 'he remembered?',
+          followUp: [
+            m('he remembers everything about you. it’s kind of a lot', 'wink'),
+          ],
+        },
+      ],
+    },
   },
   {
-    id: 'pretty',
-    chapter: '06 / FOR THE RECORD',
-    title: 'Also… you’re really pretty.',
-    lead: 'That’s not a line. It’s a fact Biscuit has personally and independently verified.',
-    aside: 'Lilac suits you, by the way.\nSo does smiling. Just saying.',
-    button: 'Stop it, Biscuit',
-    footnote: 'I will not stop it.',
-    mood: 'wink',
-    bubble: 'just saying',
+    sky: 'dawn',
+    messages: [
+      m('also… one more thing', 'open'),
+      m('you’re really pretty', 'wink'),
+      m('like, really. okay that’s it i’m not saying more, i’m shy too 🙈'),
+    ],
+    reply: {
+      kind: 'chips',
+      options: [
+        {
+          label: 'stoppp',
+          followUp: [m('no 😌', 'wink')],
+        },
+        {
+          label: '🙈',
+          followUp: [m('hehe 😌', 'wink')],
+        },
+      ],
+    },
   },
   {
-    id: 'no-pressure',
-    chapter: '07 / NO PRESSURE, PROMISE',
-    title: 'Maybe this is just a rough patch.',
-    lead: 'Rough patches pass. And you don’t owe anyone an answer today — not him, not me.',
-    aside:
-      'I only wanted you to know someone is still in your corner,\nrooting for you, whatever you decide.',
-    button: 'Give Biscuit a hug',
-    footnote: 'Take all the time you need.',
-    mood: 'warm',
-    bubble: 'no rush',
+    sky: 'morning',
+    messages: [
+      m('okay last thing, then i’ll go nap', 'open'),
+      m('maybe this is just a rough patch. every story has one'),
+      m(
+        'i’m not here to make you decide anything. no pressure. not today, not ever',
+      ),
+      m(
+        'i just didn’t want you to feel like nobody noticed. or like nobody cares',
+        'sad',
+      ),
+      m('someone does. a lot 🤍', 'happy'),
+    ],
+    reply: {
+      kind: 'hug',
+      label: 'hug biscuit 🤗',
+      prompt: 'press and hold to hug him',
+      followUp: [
+        m('best hug of my whole life 🐾', 'happy'),
+        m(
+          'take care of yourself okay? drink water. sleep on time. smile a little, it suits you',
+        ),
+        m('— biscuit (and him, nervously 🤍)'),
+      ],
+    },
   },
 ];
 
-export const khushiEnding = {
-  chapter: 'DELIVERY STATUS / HUG RECEIVED',
-  title: 'Best hug of my whole life.',
-  lead: 'Thank you for reading all the way to the end, Khushi.',
-  aside:
-    'I’ll be around, tail ready, whenever you want to talk.\nGo drink some water. Eat something nice. Be gentle with yourself. ♡',
-  footnote: 'Love, Biscuit. (And him, a little nervously.)',
+export const ending = {
+  restart: 'read it again',
+  signoff: 'this little page will always be here for you',
 };

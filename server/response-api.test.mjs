@@ -280,3 +280,18 @@ test('khushi check-in notes save per visitor and show in admin', async (t) => {
   });
   assert.deepEqual(await cleared.json(), { entries: [], notes: [] });
 });
+
+test('an emptied responses file is treated as a fresh notebook', async (t) => {
+  const { base, filePath } = await setup(t);
+  await writeFile(filePath, '');
+  const { cookie, body } = await visit(base);
+  assert.deepEqual(body, { response: null });
+  const saved = await fetch(`${base}/api/note`, {
+    method: 'PUT',
+    headers: { Cookie: cookie, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message: 'hello' }),
+  });
+  assert.equal(saved.status, 200);
+  const stored = JSON.parse(await readFile(filePath, 'utf8'));
+  assert.equal(Object.values(stored.notes)[0].message, 'hello');
+});

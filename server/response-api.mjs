@@ -101,7 +101,10 @@ export function createResponseStore(filePath) {
     } catch (error) {
       if (error.code !== 'EEXIST') throw error;
     }
-    const store = JSON.parse(await readFile(file, 'utf8'));
+    const text = await readFile(file, 'utf8');
+    // An emptied file (e.g. cleared in an editor) counts as a fresh notebook.
+    if (!text.trim()) return { version: 1, responses: {} };
+    const store = JSON.parse(text);
     if (
       store.version !== 1 ||
       !store.responses ||
