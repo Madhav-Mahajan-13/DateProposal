@@ -3,6 +3,7 @@ import { get, put, BlobPreconditionFailedError } from '@vercel/blob';
 // One private JSON document, shared by every serverless instance.
 export function createBlobResponseStore({
   validatePlan,
+  validateNotes = () => {},
   pathname = process.env.BLOB_RESPONSES_PATH ||
     `biscuit/${process.env.VERCEL_ENV || 'development'}/responses.json`,
   client = { get, put },
@@ -35,6 +36,7 @@ export function createBlobResponseStore({
       if (response.outcome !== 'declined' || response.plan !== null)
         validatePlan(response.plan);
     }
+    validateNotes(document.notes);
     if (!result.blob.etag) throw new Error('Missing storage version');
     return { document, etag: result.blob.etag };
   }
@@ -109,7 +111,26 @@ export function createBlobResponseStore({
     clear() {
       return update((document) => {
         document.responses = {};
+        delete document.notes;
       });
+    },
+    saveNote(id, message) {
+      if (
+        !/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+          id,
+        )
+      )
+        throw new Error('Invalid visitor id');
+      return update((document) => {
+        const note = { message, updatedAt: new Date().toISOString() };
+        document.notes = { ...document.notes, [id]: note };
+        return note;
+      });
+    },
+    async listNotes() {
+      return Object.values((await read()).document.notes ?? {}).sort((a, b) =>
+        b.updatedAt.localeCompare(a.updatedAt),
+      );
     },
   };
 }

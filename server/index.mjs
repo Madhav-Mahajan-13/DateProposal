@@ -41,7 +41,13 @@ export function createApplication({
         }
         const file = resolve(
           root,
-          ['/', '/admin-44444', '/admin-44444/'].includes(pathname)
+          [
+            '/',
+            '/admin-44444',
+            '/admin-44444/',
+            '/khushi',
+            '/khushi/',
+          ].includes(pathname)
             ? 'index.html'
             : pathname.slice(1),
         );

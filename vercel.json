@@ -5,7 +5,9 @@
   "outputDirectory": "dist",
   "rewrites": [
     { "source": "/admin-44444", "destination": "/index.html" },
-    { "source": "/admin-44444/", "destination": "/index.html" }
+    { "source": "/admin-44444/", "destination": "/index.html" },
+    { "source": "/khushi", "destination": "/index.html" },
+    { "source": "/khushi/", "destination": "/index.html" }
   ],
   "headers": [
     {

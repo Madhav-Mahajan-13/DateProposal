@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { SavedResponse } from '../lib/datePlanApi';
+import type { SavedNote } from '../lib/noteApi';
 import './admin.css';
 
 function formatDate(value: string, includeTime = false) {
@@ -13,6 +14,7 @@ function formatDate(value: string, includeTime = false) {
 
 export default function AdminPage() {
   const [entries, setEntries] = useState<SavedResponse[]>([]);
+  const [notes, setNotes] = useState<SavedNote[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [revision, setRevision] = useState(0);
@@ -20,7 +22,7 @@ export default function AdminPage() {
   const [notice, setNotice] = useState('');
 
   async function clearEntries() {
-    if (loading || clearing || !entries.length) return;
+    if (loading || clearing || !(entries.length + notes.length)) return;
     if (
       !window.confirm(
         'Clear all saved entries? This cannot be undone. Her form will no longer be prefilled with these answers.',
@@ -37,6 +39,7 @@ export default function AdminPage() {
       });
       if (!response.ok) throw new Error('Could not clear entries');
       setEntries([]);
+      setNotes([]);
       setNotice('All saved entries have been cleared.');
     } catch {
       setError('Could not clear the entries. Please try again.');
@@ -62,8 +65,12 @@ export default function AdminPage() {
     })
       .then(async (response) => {
         if (!response.ok) throw new Error('Could not load entries');
-        const data: { entries: SavedResponse[] } = await response.json();
-        if (!controller.signal.aborted) setEntries(data.entries);
+        const data: { entries: SavedResponse[]; notes?: SavedNote[] } =
+          await response.json();
+        if (!controller.signal.aborted) {
+          setEntries(data.entries);
+          setNotes(data.notes ?? []);
+        }
       })
       .catch(() => {
         if (!controller.signal.aborted)
@@ -107,7 +114,9 @@ export default function AdminPage() {
             </button>
             <button
               className="secondary admin-clear"
-              disabled={loading || clearing || entries.length === 0}
+              disabled={
+                loading || clearing || entries.length + notes.length === 0
+              }
               onClick={() => void clearEntries()}
             >
               {clearing ? 'Clearing…' : 'Clear all entries'}
@@ -131,6 +140,29 @@ export default function AdminPage() {
             <h2>A little anticipation.</h2>
             <p>Her saved plan or final no will appear here.</p>
           </section>
+        )}
+        {notes.length > 0 && (
+          <div className="admin-entries">
+            {notes.map(({ message, updatedAt }, index) => (
+              <article
+                className="admin-entry"
+                key={`note-${updatedAt}-${index}`}
+              >
+                <div className="admin-entry-heading">
+                  <h2>
+                    How she’s really doing <span aria-hidden="true">♡</span>
+                  </h2>
+                  <p>
+                    From /khushi ·{' '}
+                    <time dateTime={updatedAt}>
+                      {formatDate(updatedAt, true)}
+                    </time>
+                  </p>
+                </div>
+                <p className="admin-note">{message}</p>
+              </article>
+            ))}
+          </div>
         )}
         <div className="admin-entries" aria-busy={loading}>
           {entries.map(({ plan, updatedAt, outcome }, index) => (

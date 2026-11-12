@@ -1,0 +1,252 @@
+/* Khushi's page: lilac and white, scoped by the html.theme-lilac class. */
+html.theme-lilac {
+  --paper: #faf8fd;
+  --ink: #3b3346;
+  --muted: #776d86;
+  --red: #8d6bbd; /* the accent token, lilac here */
+  --line: #e5dcf1;
+  --lilac-soft: #efe7fa;
+  --lilac-mid: #c9b4e6;
+}
+html.theme-lilac body {
+  background:
+    radial-gradient(circle at 15% 10%, #f1e8fc 0, transparent 40%),
+    radial-gradient(circle at 90% 70%, #f3ecfb 0, transparent 45%), var(--paper);
+  background-attachment: fixed;
+}
+html.theme-lilac body::before {
+  opacity: 0.06;
+}
+
+.khushi-page h1 em {
+  color: var(--red);
+}
+.khushi-page .wordmark {
+  text-transform: lowercase;
+}
+.khushi-page .halo {
+  background: radial-gradient(circle, #ece2f9 0%, #f3edfb 55%, #faf8fd00 72%);
+}
+.khushi-page .doodle {
+  color: #a487cf;
+}
+.khushi-page .star {
+  color: #c2a9e3;
+}
+.khushi-page .handwritten {
+  color: #8a76a6;
+}
+.khushi-page .hello {
+  animation: appear 0.4s ease;
+}
+.khushi-page .name-tag {
+  border-color: var(--lilac-mid);
+  background: #fff;
+}
+.khushi-page .status-dot {
+  background: #a487cf;
+}
+.khushi-page .dog-rig {
+  filter: drop-shadow(0 8px 7px #6b4f9418);
+}
+
+.khushi-page .tape {
+  background: #d9c8f0a8;
+}
+.khushi-page .note {
+  background: #ffffff;
+  border-color: #e7dff2;
+  box-shadow:
+    0 10px 32px #5c3f8a14,
+    2px 3px 0 #ece4f6;
+}
+.khushi-page .note-top {
+  border-bottom-color: #ece5f5;
+  color: #8d82a0;
+}
+.khushi-page .chapter,
+.khushi-page .note-bottom > span {
+  color: #9686ad;
+}
+.khushi-page .primary:hover:not(:disabled) {
+  background: #7656a6;
+}
+.khushi-page .primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+.khushi-page .secondary:hover {
+  background: var(--lilac-soft);
+}
+.khushi-page .progress span {
+  background: #e3d9f0;
+}
+.khushi-page button:focus-visible {
+  outline-color: #8d6bbd;
+}
+.khushi-page footer {
+  color: #8d82a0;
+}
+
+/* Check-in form */
+.check-in {
+  display: grid;
+  gap: 8px;
+  margin-top: -6px;
+}
+.check-in-label {
+  font-family: 'Caveat', 'Segoe Print', cursive;
+  font-size: 22px;
+  color: #8a76a6;
+}
+.check-in textarea {
+  width: 100%;
+  resize: vertical;
+  min-height: 120px;
+  font: 15px/1.6 var(--sans);
+  color: var(--ink);
+  background: #fcfaff;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 12px 14px;
+}
+.check-in textarea::placeholder {
+  color: #b0a5c0;
+  font-style: italic;
+}
+.check-in textarea:focus-visible {
+  outline: 3px solid #cdb9ea;
+  outline-offset: 1px;
+  border-color: #a487cf;
+}
+.check-in-count {
+  justify-self: end;
+  font-size: 10px;
+  color: #a79bb8;
+}
+.check-in-error {
+  margin: 0;
+  font-size: 12px;
+  color: #a2445a;
+}
+.check-in .actions {
+  margin-top: 6px;
+}
+.check-in-thanks p {
+  font-family: 'Caveat', 'Segoe Print', cursive;
+  font-size: 24px;
+  color: #7656a6;
+  margin: 0 0 16px;
+}
+
+/* White rose bouquet */
+.bouquet {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  height: 150px;
+  margin: -6px 0 16px;
+}
+.bouquet img {
+  width: 80px;
+  height: auto;
+  filter: drop-shadow(0 6px 6px #5c3f8a1c);
+  transform-origin: 50% 95%;
+  animation: bouquet-in 700ms ease-out both;
+}
+.bouquet img:nth-child(1) {
+  --tilt: -18deg;
+  margin-right: -30px;
+}
+.bouquet img:nth-child(2) {
+  --tilt: 0deg;
+  width: 92px;
+  z-index: 1;
+  animation-delay: 120ms;
+}
+.bouquet img:nth-child(3) {
+  --tilt: 18deg;
+  margin-left: -30px;
+  animation-delay: 240ms;
+}
+.bouquet img {
+  transform: rotate(var(--tilt));
+}
+@keyframes bouquet-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px) rotate(var(--tilt)) scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) rotate(var(--tilt)) scale(1);
+  }
+}
+
+/* Drifting petals */
+.petals {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+.petals span {
+  position: absolute;
+  top: -30px;
+  left: calc(var(--i) * 7.3% + 2%);
+  width: 12px;
+  height: 16px;
+  border-radius: 80% 0 80% 0;
+  background: var(--i-color, #e6dbf6);
+  opacity: 0.7;
+  animation: petal-fall calc(14s + var(--i) * 0.9s) linear infinite;
+  animation-delay: calc(var(--i) * -1.7s);
+}
+.petals span:nth-child(odd) {
+  background: #ffffff;
+  box-shadow: 0 0 0 1px #e9e1f4;
+}
+.petals span:nth-child(3n) {
+  background: #d8c6f0;
+  width: 9px;
+  height: 12px;
+}
+@keyframes petal-fall {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate(40px, 55vh) rotate(160deg);
+  }
+  100% {
+    transform: translate(-20px, 110vh) rotate(320deg);
+  }
+}
+.khushi-page > header,
+.khushi-page > main,
+.khushi-page > footer {
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 650px) {
+  .bouquet {
+    height: 120px;
+  }
+  .bouquet img {
+    width: 64px;
+  }
+  .bouquet img:nth-child(2) {
+    width: 74px;
+  }
+  .check-in textarea {
+    font-size: 16px; /* avoids iOS zoom on focus */
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .petals {
+    display: none;
+  }
+}

@@ -54,7 +54,10 @@ async function save(base, cookie, value) {
 test('admin lists saved plans without visitor cookies', async (t) => {
   const { base } = await setup(t);
   const endpoint = `${base}/api/admin-44444/entries`;
-  assert.deepEqual(await (await fetch(endpoint)).json(), { entries: [] });
+  assert.deepEqual(await (await fetch(endpoint)).json(), {
+    entries: [],
+    notes: [],
+  });
   const { cookie } = await visit(base);
   await save(base, cookie, plan);
   await save(base, cookie, { ...plan, place: 'Updated spot' });
@@ -250,4 +253,30 @@ test('fails safely without overwriting a damaged JSON file', async (t) => {
   await writeFile(filePath, '{damaged file');
   assert.equal((await save(base, cookie, plan)).status, 500);
   assert.equal(await readFile(filePath, 'utf8'), '{damaged file');
+});
+
+test('khushi check-in notes save per visitor and show in admin', async (t) => {
+  const { base } = await setup(t);
+  const { cookie } = await visit(base);
+  const put = (body) =>
+    fetch(`${base}/api/note`, {
+      method: 'PUT',
+      headers: { Cookie: cookie, 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+  assert.equal((await put({ message: '   ' })).status, 400);
+  assert.equal((await put({ message: 'x'.repeat(2001) })).status, 400);
+  const saved = await put({ message: '  Honestly, a bit tired.  ' });
+  assert.equal(saved.status, 200);
+  assert.equal((await saved.json()).note.message, 'Honestly, a bit tired.');
+  await save(base, cookie, plan);
+  const admin = await (await fetch(`${base}/api/admin-44444/entries`)).json();
+  assert.equal(admin.notes.length, 1);
+  assert.equal(admin.notes[0].message, 'Honestly, a bit tired.');
+  assert.equal(admin.entries.length, 1);
+  const cleared = await fetch(`${base}/api/admin-44444/entries`, {
+    method: 'DELETE',
+    headers: { 'X-Confirm-Clear': 'all-entries' },
+  });
+  assert.deepEqual(await cleared.json(), { entries: [], notes: [] });
 });

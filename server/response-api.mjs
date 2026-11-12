@@ -55,6 +55,31 @@ export function validatePlan(value) {
   };
 }
 
+export function validateNote(value) {
+  const message =
+    typeof value?.message === 'string' ? value.message.trim() : '';
+  if (!message || message.length > 2000)
+    throw new RequestError(
+      400,
+      'Please write a little something (up to 2000 characters).',
+    );
+  return message;
+}
+
+// Notes live beside responses in the same document: { [visitorId]: note }.
+export function validateNotes(notes) {
+  if (notes === undefined) return;
+  if (!notes || typeof notes !== 'object' || Array.isArray(notes))
+    throw new Error('Invalid saved notes');
+  for (const [id, note] of Object.entries(notes))
+    if (
+      !sessionPattern.test(id) ||
+      typeof note?.message !== 'string' ||
+      typeof note.updatedAt !== 'string'
+    )
+      throw new Error('Invalid saved note');
+}
+
 export function createResponseStore(filePath) {
   const file = resolve(filePath);
   let queue = Promise.resolve();
@@ -98,6 +123,7 @@ export function createResponseStore(filePath) {
         throw new Error('Invalid saved plan');
       }
     }
+    validateNotes(store.notes);
     return store;
   }
 
@@ -133,6 +159,23 @@ export function createResponseStore(filePath) {
         await readStore();
         await writeStore({ version: 1, responses: {} });
       });
+    },
+    saveNote(id, message) {
+      return serial(async () => {
+        if (!sessionPattern.test(id)) throw new Error('Invalid visitor id');
+        const store = await readStore();
+        const note = { message, updatedAt: new Date().toISOString() };
+        store.notes = { ...store.notes, [id]: note };
+        await writeStore(store);
+        return note;
+      });
+    },
+    listNotes() {
+      return serial(async () =>
+        Object.values((await readStore()).notes ?? {}).sort((a, b) =>
+          b.updatedAt.localeCompare(a.updatedAt),
+        ),
+      );
     },
     list() {
       return serial(async () =>
@@ -211,7 +254,7 @@ export function createResponseApi({
   store = process.env.VERCEL === '1' ||
   process.env.BLOB_READ_WRITE_TOKEN ||
   process.env.BLOB_STORE_ID
-    ? createBlobResponseStore({ validatePlan })
+    ? createBlobResponseStore({ validatePlan, validateNotes })
     : createResponseStore(filePath),
 } = {}) {
   return (req, res, next) => {
@@ -227,9 +270,14 @@ export function createResponseApi({
     }
     return (async () => {
       const isAdmin = pathname === '/api/admin-44444/entries';
-      if (!isAdmin && pathname !== '/api/response')
+      const isNote = pathname === '/api/note';
+      if (!isAdmin && !isNote && pathname !== '/api/response')
         throw new RequestError(404, 'Not found.');
-      const methods = isAdmin ? ['GET', 'DELETE'] : ['GET', 'PUT'];
+      const methods = isAdmin
+        ? ['GET', 'DELETE']
+        : isNote
+          ? ['PUT']
+          : ['GET', 'PUT'];
       if (!methods.includes(req.method)) {
         res.setHeader('Allow', methods.join(', '));
         throw new RequestError(405, 'Method not allowed.');
@@ -255,9 +303,12 @@ export function createResponseApi({
           if (req.headers['x-confirm-clear'] !== 'all-entries')
             throw new RequestError(400, 'Please confirm clearing all entries.');
           await store.clear();
-          json(res, 200, { entries: [] });
+          json(res, 200, { entries: [], notes: [] });
         } else {
-          json(res, 200, { entries: await store.list() });
+          json(res, 200, {
+            entries: await store.list(),
+            notes: await store.listNotes(),
+          });
         }
         return;
       }
@@ -276,6 +327,14 @@ export function createResponseApi({
           'Set-Cookie',
           `${SESSION_COOKIE}=${id}; Path=/; HttpOnly; SameSite=Lax; Max-Age=31536000${secure ? '; Secure' : ''}`,
         );
+      }
+      if (isNote) {
+        const note = await store.saveNote(
+          id,
+          validateNote(await readBody(req)),
+        );
+        json(res, 200, { note });
+        return;
       }
       const response =
         req.method === 'GET'
