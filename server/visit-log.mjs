@@ -1,10 +1,12 @@
 import { randomUUID } from 'node:crypto';
 import { mkdir, readFile, rename, rm, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
-import { get, put, BlobPreconditionFailedError } from '@vercel/blob';
+import { del, get, list as listBlobs, put } from '@vercel/blob';
 
-// Oldest visits are dropped once the log grows past this.
+// Oldest visits are dropped once the local log grows past this.
 const MAX_VISITS = 5000;
+// How many of the newest visits the hosted dashboard loads.
+const DASHBOARD_LIMIT = 500;
 
 const text = (value, max) =>
   typeof value === 'string' ? value.slice(0, max) : '';
@@ -161,49 +163,59 @@ function createFileVisitLog(filePath) {
   };
 }
 
-function createBlobVisitLog(
-  pathname = process.env.BLOB_VISITS_PATH ||
-    `biscuit/${process.env.VERCEL_ENV || 'development'}/visits.json`,
+// One small blob per visit. Nothing is ever overwritten, so there is no
+// read-modify-write cycle and no ETag to match (a single growing file broke
+// once it was large enough for its ETag to come back altered).
+export function createBlobVisitLog(
+  prefix = process.env.BLOB_VISITS_PREFIX ||
+    `biscuit/${process.env.VERCEL_ENV || 'development'}/visits/`,
+  client = { get, put, list: listBlobs, del },
 ) {
-  async function read() {
-    const result = await get(pathname, { access: 'private', useCache: false });
-    if (!result) return { document: { version: 1, visits: [] } };
-    if (result.statusCode !== 200 || !result.stream)
-      throw new Error('Cannot read visit log');
-    const document = checkDocument(await new Response(result.stream).json());
-    return { document, etag: result.blob.etag };
-  }
-  async function update(change) {
-    for (let attempt = 0; attempt < 5; attempt++) {
-      const { document, etag } = await read();
-      change(document);
-      try {
-        await put(pathname, JSON.stringify(document, null, 2) + '\n', {
-          access: 'private',
-          addRandomSuffix: false,
-          contentType: 'application/json',
-          allowOverwrite: Boolean(etag),
-          ...(etag ? { ifMatch: etag } : {}),
-        });
-        return;
-      } catch (error) {
-        if (attempt === 4) throw error;
-        if (error instanceof BlobPreconditionFailedError) continue;
-        if (!etag && (await read()).etag) continue;
-        throw error;
-      }
+  // list() returns pathnames in lexicographic order; a reversed timestamp
+  // makes the newest visits come first.
+  const pathnameFor = (visit) =>
+    `${prefix}${String(9e15 - Date.parse(visit.visitedAt)).padStart(16, '0')}-${visit.id}.json`;
+
+  async function readVisit(pathname) {
+    try {
+      const result = await client.get(pathname, { access: 'private' });
+      if (result?.statusCode !== 200 || !result.stream) return null;
+      const visit = await new Response(result.stream).json();
+      return typeof visit?.visitedAt === 'string' ? visit : null;
+    } catch {
+      return null; // one unreadable visit shouldn't hide the rest
     }
   }
+
   return {
-    add: (visit) =>
-      update((document) => {
-        document.visits = [...document.visits, visit].slice(-MAX_VISITS);
-      }),
-    list: async () => (await read()).document.visits,
-    clear: () =>
-      update((document) => {
-        document.visits = [];
-      }),
+    async add(visit) {
+      await client.put(pathnameFor(visit), JSON.stringify(visit), {
+        access: 'private',
+        addRandomSuffix: false,
+        contentType: 'application/json',
+      });
+    },
+    // Oldest first, like the file log; only the newest DASHBOARD_LIMIT.
+    async list() {
+      const { blobs } = await client.list({ prefix, limit: DASHBOARD_LIMIT });
+      const visits = [];
+      for (let i = 0; i < blobs.length; i += 10) {
+        const batch = await Promise.all(
+          blobs.slice(i, i + 10).map((blob) => readVisit(blob.pathname)),
+        );
+        visits.push(...batch.filter(Boolean));
+      }
+      return visits.sort((a, b) => a.visitedAt.localeCompare(b.visitedAt));
+    },
+    async clear() {
+      let cursor;
+      do {
+        const page = await client.list({ prefix, limit: 1000, cursor });
+        if (page.blobs.length)
+          await client.del(page.blobs.map((blob) => blob.url));
+        cursor = page.hasMore ? page.cursor : undefined;
+      } while (cursor);
+    },
   };
 }
 

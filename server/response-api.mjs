@@ -379,6 +379,9 @@ export function createResponseApi({
             })();
       json(res, 200, { response });
     })().catch((error) => {
+      // Unexpected failures show up in Vercel → Logs with the real cause.
+      if (!(error instanceof RequestError))
+        console.error(`${req.method} ${pathname} failed:`, error);
       if (res.destroyed || res.writableEnded) return;
       json(res, error instanceof RequestError ? error.status : 500, {
         error:
