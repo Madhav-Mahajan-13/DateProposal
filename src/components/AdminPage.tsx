@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import type { SavedResponse } from '../lib/datePlanApi';
 import type { SavedNote } from '../lib/noteApi';
 import './admin.css';
+import './visits.css';
 
 function formatDate(value: string, includeTime = false) {
   const date = new Date(includeTime ? value : `${value}T12:00:00`);
@@ -100,6 +101,9 @@ export default function AdminPage() {
             <p>All the lovely details, saved in one place.</p>
           </div>
           <div className="admin-controls">
+            <a className="secondary button" href="/admin-44444/visits">
+              Visitor log
+            </a>
             <button
               className="secondary"
               disabled={loading || clearing}

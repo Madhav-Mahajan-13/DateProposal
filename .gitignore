@@ -13,6 +13,7 @@ artifacts/browser-profile/
 .vscode/*
 !.vscode/extensions.json
 data/responses.json
+data/visits.json
 data/*.tmp
 .vercel/
 artifacts/

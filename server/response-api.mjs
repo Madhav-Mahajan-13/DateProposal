@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { mkdir, readFile, rename, rm, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { createBlobResponseStore } from './blob-store.mjs';
+import { buildVisit, createVisitLog } from './visit-log.mjs';
 
 const SESSION_COOKIE = 'biscuit_visitor';
 const sessionPattern =
@@ -259,6 +260,7 @@ export function createResponseApi({
   process.env.BLOB_STORE_ID
     ? createBlobResponseStore({ validatePlan, validateNotes })
     : createResponseStore(filePath),
+  visits = createVisitLog(),
 } = {}) {
   return (req, res, next) => {
     const pathname = new URL(req.url || '/', 'http://localhost').pathname;
@@ -274,13 +276,24 @@ export function createResponseApi({
     return (async () => {
       const isAdmin = pathname === '/api/admin-44444/entries';
       const isNote = pathname === '/api/note';
-      if (!isAdmin && !isNote && pathname !== '/api/response')
+      const isVisit = pathname === '/api/visit';
+      const isVisitAdmin = pathname === '/api/admin-44444/visits';
+      if (
+        !isAdmin &&
+        !isNote &&
+        !isVisit &&
+        !isVisitAdmin &&
+        pathname !== '/api/response'
+      )
         throw new RequestError(404, 'Not found.');
-      const methods = isAdmin
-        ? ['GET', 'DELETE']
-        : isNote
-          ? ['PUT']
-          : ['GET', 'PUT'];
+      const methods =
+        isAdmin || isVisitAdmin
+          ? ['GET', 'DELETE']
+          : isNote
+            ? ['PUT']
+            : isVisit
+              ? ['POST']
+              : ['GET', 'PUT'];
       if (!methods.includes(req.method)) {
         res.setHeader('Allow', methods.join(', '));
         throw new RequestError(405, 'Method not allowed.');
@@ -300,6 +313,23 @@ export function createResponseApi({
       }
       if (req.headers['sec-fetch-site'] === 'cross-site')
         throw new RequestError(403, 'Please use this site to save your plan.');
+      if (isVisit) {
+        await visits.add(buildVisit(req, await readBody(req)));
+        json(res, 200, { ok: true });
+        return;
+      }
+      if (isVisitAdmin) {
+        res.setHeader('X-Robots-Tag', 'noindex, nofollow');
+        if (req.method === 'DELETE') {
+          if (req.headers['x-confirm-clear'] !== 'all-visits')
+            throw new RequestError(400, 'Please confirm clearing all visits.');
+          await visits.clear();
+          json(res, 200, { visits: [] });
+        } else {
+          json(res, 200, { visits: (await visits.list()).toReversed() });
+        }
+        return;
+      }
       if (isAdmin) {
         res.setHeader('X-Robots-Tag', 'noindex, nofollow');
         if (req.method === 'DELETE') {
