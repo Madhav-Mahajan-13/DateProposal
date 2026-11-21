@@ -1,0 +1,202 @@
+.apology-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgba(66, 59, 49, 0.45);
+  backdrop-filter: blur(3px);
+  animation: apology-fade 0.5s ease both;
+}
+.apology-letter {
+  width: min(560px, 100%);
+  max-height: calc(100dvh - 32px);
+  display: flex;
+  flex-direction: column;
+  padding: clamp(24px, 5vw, 44px);
+  background: #fffcf5;
+  border: 1px solid #e3d7c4;
+  border-radius: 6px;
+  box-shadow:
+    0 6px 0 #e9e1d2,
+    0 24px 60px rgba(66, 59, 49, 0.25);
+  animation: apology-rise 0.6s 0.1s ease both;
+}
+.apology-mark {
+  color: var(--red);
+  font-size: 26px;
+  line-height: 1;
+}
+.apology-letter h2 {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(26px, 5vw, 34px);
+  margin: 10px 0 16px;
+}
+.apology-body {
+  overflow-y: auto;
+  padding-right: 6px;
+  margin-right: -6px;
+}
+.apology-body p {
+  margin: 0 0 14px;
+  font-size: 16px;
+  line-height: 1.65;
+}
+.apology-body p:first-child {
+  font-family: 'Caveat', cursive;
+  font-size: 26px;
+  line-height: 1.3;
+  color: var(--red);
+}
+.apology-close {
+  align-self: flex-end;
+  margin-top: 18px;
+  min-height: 44px;
+  padding: 0 22px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+.apology-close:hover {
+  background: #f2ecdf;
+}
+/* Envelope sticker that reopens the letter */
+.apology-sticker {
+  position: fixed;
+  right: clamp(16px, 3vw, 32px);
+  bottom: clamp(16px, 3vw, 32px);
+  z-index: 900;
+  width: 116px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  animation:
+    apology-pop 0.8s ease both,
+    apology-sigh 5s 0.8s ease-in-out infinite;
+  -webkit-tap-highlight-color: transparent;
+}
+.apology-sticker[hidden] {
+  display: none;
+}
+.apology-sticker svg {
+  position: relative;
+  width: 76px;
+  height: 57px;
+  display: block;
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.35));
+  transform: rotate(-4deg);
+  transition: transform 0.4s ease;
+}
+.apology-sticker:hover svg,
+.apology-sticker:focus-visible svg {
+  transform: rotate(0deg) scale(1.05);
+}
+/* A slow dark ripple, like a held breath */
+.apology-sticker-ring {
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  width: 76px;
+  height: 66px;
+  margin-left: -38px;
+  border-radius: 50%;
+  background: rgba(20, 18, 16, 0.3);
+  animation: apology-ring 3s ease-out infinite;
+  pointer-events: none;
+}
+/* A dim light that fades in and out, like an unread message */
+.apology-sticker-dot {
+  position: absolute;
+  top: -4px;
+  right: 18px;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: #d6d0c6;
+  border: 2px solid #1c1a18;
+  box-shadow: 0 0 8px rgba(214, 208, 198, 0.7);
+  animation: apology-blink 2.2s ease-in-out infinite;
+}
+.apology-sticker-label {
+  position: relative;
+  font-family: 'Caveat', cursive;
+  font-size: 19px;
+  line-height: 1;
+  color: #cfc8bd;
+  background: #1c1a18;
+  padding: 3px 10px 4px;
+  border-radius: 999px;
+  border: 1px solid #45403a;
+  white-space: nowrap;
+}
+@keyframes apology-pop {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+/* Sinks and droops a little, then slowly lifts again */
+@keyframes apology-sigh {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0);
+  }
+  45% {
+    transform: translateY(5px) rotate(-3deg);
+  }
+  60% {
+    transform: translateY(5px) rotate(-3deg);
+  }
+}
+@keyframes apology-ring {
+  from {
+    transform: scale(0.75);
+    opacity: 0.8;
+  }
+  to {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+@keyframes apology-blink {
+  50% {
+    opacity: 0.1;
+  }
+}
+@keyframes apology-fade {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes apology-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .apology-backdrop,
+  .apology-letter,
+  .apology-sticker,
+  .apology-sticker-ring {
+    animation: none;
+  }
+  .apology-sticker-ring {
+    display: none;
+  }
+  /* Keep a slow, gentle blink so it still catches the eye. */
+  .apology-sticker-dot {
+    animation-duration: 3s;
+  }
+}

@@ -2,6 +2,7 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
 import AdminPage from './components/AdminPage';
+import ApologyNote from './components/ApologyNote';
 import KhushiPage from './components/KhushiPage';
 import VisitsPage from './components/VisitsPage';
 import { trackVisit } from './lib/trackVisit';
@@ -18,10 +19,11 @@ createRoot(document.getElementById('root')!).render(
       <AdminPage />
     ) : path === '/admin-44444/visits' ? (
       <VisitsPage />
-    ) : path === '/khushi' ? (
-      <KhushiPage />
     ) : (
-      <App />
+      <>
+        {path === '/khushi' ? <KhushiPage /> : <App />}
+        <ApologyNote />
+      </>
     )}
   </StrictMode>,
 );
