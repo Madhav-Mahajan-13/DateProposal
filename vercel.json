@@ -8,6 +8,10 @@
     { "source": "/admin-44444/", "destination": "/index.html" },
     { "source": "/admin-44444/visits", "destination": "/index.html" },
     { "source": "/admin-44444/visits/", "destination": "/index.html" },
+    { "source": "/bouquet", "destination": "/index.html" },
+    { "source": "/bouquet/", "destination": "/index.html" },
+    { "source": "/bouquetv2", "destination": "/index.html" },
+    { "source": "/bouquetv2/", "destination": "/index.html" },
     { "source": "/khushi", "destination": "/index.html" },
     { "source": "/khushi/", "destination": "/index.html" }
   ],

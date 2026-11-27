@@ -1,0 +1,44 @@
+.bouquet-v2 {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  background: radial-gradient(
+    ellipse 75% 65% at 50% 45%,
+    #1d1119 0%,
+    #120b10 55%,
+    #070407 100%
+  );
+}
+.bouquet-v2__canvas,
+.bouquet-v2__overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.bouquet-v2__canvas {
+  touch-action: none;
+  cursor: grab;
+}
+.bouquet-v2__canvas:active {
+  cursor: grabbing;
+}
+.bouquet-v2__overlay {
+  pointer-events: none;
+}
+.bouquet-v2__hint {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: max(20px, env(safe-area-inset-bottom));
+  margin: 0;
+  text-align: center;
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(232, 214, 224, 0.45);
+  pointer-events: none;
+}

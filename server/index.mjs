@@ -47,6 +47,10 @@ export function createApplication({
             '/admin-44444/',
             '/admin-44444/visits',
             '/admin-44444/visits/',
+            '/bouquet',
+            '/bouquet/',
+            '/bouquetv2',
+            '/bouquetv2/',
             '/khushi',
             '/khushi/',
           ].includes(pathname)
